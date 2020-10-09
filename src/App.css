@@ -1,3 +1,4 @@
+
 .App {
   text-align: center;
 }
@@ -28,6 +29,9 @@
   color: #61dafb;
 }
 
+.fas {
+  font-weight: 900;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
