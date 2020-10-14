@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-
-import './App.css';
+import { CardDeck, Card, Container, Row, Col } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+//import './App.css';
 
 function App() {
 
@@ -59,7 +60,7 @@ function App() {
   return (
     <div className="App">
       
-        
+        <header>
         <button onClick={()=> {authenticate().then(()=> loadClient())}}>Log in</button>
         <input
           id="searchbar"
@@ -72,31 +73,37 @@ function App() {
             setText(event.target.value)
           }}
         />
-        <button onClick={execute}><i class="fas fa-search"></i>search</button>
-        <div className="container">
-        <div className="row row-cols-1 row-cols-md-3">
+        <button onClick={execute}>search</button>
         
+        <Container>
+        
+        <div className="row row-cols-md-3">
           {items.map(item => (
-            <div className="col mb-4">
-            <div className="card" style={cssCard}>
-                <iframe width="200" height="150" src={`https://www.youtube.com/embed/${item.id.videoId}`} frameborder="0" allow="accelerometer; 
-                autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>  
-                <p>{item.snippet.title}</p>    
-            </div>
-            </div>
+          <div className="col mb-4">
+            <Card>
+            
+            <iframe variant="top"  width="300" height="170" src={`https://www.youtube.com/embed/${item.id.videoId}`} fframeBorder="0" allow="accelerometer; 
+                autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>  
+            <Card.Body>
+              <Card.Title>{item.snippet.title}</Card.Title>
+              
+              
+            </Card.Body>
+          </Card>
+          </div>
           ))}
-        
         </div>
-        </div>
+     
+        </Container>
 
-        <button onClick={execute}>1</button>
+        <button onClick={execute}>load more</button>
         {/* <button onClick={execute}>2</button>
         <button onClick={execute}>3</button> */}
 
 
 
 
-      
+  </header>
     </div>
   );
 }
