@@ -1,20 +1,24 @@
 
 
 body {
-  background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);;
+  
+ 
 
 }
 header {
+  background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
   text-align: center;
   text-decoration: none;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   /* flex-direction: column; */
   align-items: center;
   justify-content: center;
   text-decoration: none;
 } 
-
+.con {
+  background-color: #fff1eb
+}
 .search :after {
   content: "";
   background: white;

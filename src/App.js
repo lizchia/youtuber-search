@@ -96,7 +96,8 @@ function App() {
         />
         <button style={cssButton} onClick={execute}>search</button>
         </header>
-        <Container>
+        <div className='con'>
+        <Container >
         
         <div className="row row-cols-md-3">
           {items.map(item => (
@@ -104,24 +105,26 @@ function App() {
             <Card>
               <iframe variant="top"  src={`https://www.youtube.com/embed/${item.id.videoId}`} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>  
               <Card.Body>
-              <Card.Title>{item.snippet.title}</Card.Title> 
+              <Card.Title style={{fontSize:'12pt', color: 'grey'}}>{item.snippet.title}</Card.Title> 
               </Card.Body>
             </Card>
           </div>
           ))}
         </div>
      
+        
+        {showPage?
+            <Pagination
+              current={1}
+              pageSize={3}
+              total={10}
+            />
+            :
+            ''
+        
+        }
         </Container>
-    {showPage?
-        <Pagination
-          defaultCurrent={1}
-          pageSize={3}
-          total={10}
-        />
-        :
-        ''
-    
-    }
+        </div>
     </div>
   );
 }
