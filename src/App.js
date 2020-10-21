@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import { CardDeck, Card, Container, Row, Pagination } from 'react-bootstrap';
-import ReactPaginate from 'react-paginate';
+import { Card, Container } from 'react-bootstrap';
+import { Pagination } from 'antd';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import 'antd/dist/antd.css';
 
 function App() {
 
   const [items, setItems] = useState([])
   const [text, setText]= useState('')
   const [nextPageToken, setNextPageToken] = useState('')
+  const [showPage, setShowPage]= useState(false)
   
   const cssButton = {
     'font-family': 'Hack, monospace',
-    'background': '#0F0F6D',
+    'background': 'transparent',
     'color': '#ffffff',
     'cursor': 'pointer',
     'font-size': '1em',
@@ -24,48 +26,36 @@ function App() {
     'width': '10%',
   };
 
-  let active = 1;
-  let page = [];
-  for (let number = 1; number <= 3; number++) {
-    page.push(
-      <Pagination.Items key={number} active={number === active}>
-        {number}
-      </Pagination.Items>,
-    );
-  }
+  let active = 'none';
 
-  const paginationBasic = (
-    <div>
-      <Pagination>{page}</Pagination>
-    </div>
-  );
-
-   function authenticate() {
-     console.log('click')
+  function authenticate() {
+    console.log('click')
     return window.gapi.auth2.getAuthInstance()
         .signIn({scope: "https://www.googleapis.com/auth/youtube.force-ssl"})
         .then(function() { console.log("Sign-in successful"); },
               function(err) { console.error("Error signing in", err); });
   }
-    function loadClient() {
-      window.gapi.client.setApiKey("AIzaSyDsm_ab8iLjXFbn1te-Z7T-BjeXd-QdbK8");
+  function loadClient() {
+    window.gapi.client.setApiKey("AIzaSyDsm_ab8iLjXFbn1te-Z7T-BjeXd-QdbK8");
     return window.gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
         .then(function() { console.log("GAPI client loaded for API"); },
               function(err) { console.error("Error loading GAPI client for API", err); });
   }
-    function execute() {
+  function execute() {
+    
     return window.gapi.client.youtube.search.list({
       "part": [
         "snippet"
       ],
       "pageToken": nextPageToken,
-      "maxResults": 30,
+      "maxResults": 10,
       "q": text,
       "type": [
         "video"
       ]
     })
         .then(function(response) {
+                setShowPage(true)
                 setText(text)
                 setItems([...items, ...response.result.items])
                 setNextPageToken(response.result.nextPageToken)
@@ -83,23 +73,29 @@ function App() {
 
 
   return (
+
+
     <div className="App">
-      
+            
         <header>
         <button style={cssButton} onClick={()=> {authenticate().then(()=> loadClient())}}>Log in</button>
         <input
           id="searchbar"
-          className="form-control"
+          className="form-control search"
           type="text"
           value={text}
           placeholder="what do you want??"
           onChange={(event) => {
-            console.log(event.target.value)
+            // console.log(event.target.value)
             setText(event.target.value)
+            
+            // if(event.key === 'Enter'){
+            //   execute(event.target.value)
+            // }
           }}
         />
         <button style={cssButton} onClick={execute}>search</button>
-        
+        </header>
         <Container>
         
         <div className="row row-cols-md-3">
@@ -116,15 +112,16 @@ function App() {
         </div>
      
         </Container>
-
-        {/* <button onClick={execute}>load more</button> */}
-        {/* <button onClick={execute}>2</button>
-        <button onClick={execute}>3</button> */}
-
-        <paginationBasic />
-
-
-        </header>
+    {showPage?
+        <Pagination
+          defaultCurrent={1}
+          pageSize={3}
+          total={10}
+        />
+        :
+        ''
+    
+    }
     </div>
   );
 }
