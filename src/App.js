@@ -11,6 +11,7 @@ function App() {
   const [items, setItems] = useState([])
   const [text, setText]= useState('')
   const [nextPageToken, setNextPageToken] = useState('')
+  const [prevPageToken, setPrevPageToken] = useState('')
   const [showPage, setShowPage]= useState(false)
   
   const cssButton = {
@@ -23,10 +24,13 @@ function App() {
     'border': 0,
     'transition': 'all 0.5s',
     'border-radius': '10px',
-    'width': '10%',
   };
 
-  let active = 'none';
+  // let active = 'none';
+  function onChange(event) {
+    console.log(event)
+    return execute()
+  }
 
   function authenticate() {
     console.log('click')
@@ -47,7 +51,9 @@ function App() {
       "part": [
         "snippet"
       ],
-      "pageToken": nextPageToken,
+      // "pageToken": nextPageToken,
+      "nextPageToken": nextPageToken,
+      "prevPageToken": prevPageToken,
       "maxResults": 10,
       "q": text,
       "type": [
@@ -55,10 +61,13 @@ function App() {
       ]
     })
         .then(function(response) {
+                console.log(response.result)
                 setShowPage(true)
                 setText(text)
-                setItems([...items, ...response.result.items])
+                // setItems([...items, ...response.result.items])
+                setItems(response.result.items)
                 setNextPageToken(response.result.nextPageToken)
+                setPrevPageToken(response.result.prevPageToken)
                 console.log("Response", response);
               },
               function(err) { console.error("Execute error", err); });
@@ -115,9 +124,15 @@ function App() {
         
         {showPage?
             <Pagination
-              current={1}
-              pageSize={3}
-              total={10}
+              className='text-center'
+              size="small"
+              // current={1}
+              // pageSize={10}
+              total={30}
+              onChange={(event)=>{
+                // console.log(event)
+                onChange()
+              }}
             />
             :
             ''

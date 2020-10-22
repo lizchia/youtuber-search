@@ -19,6 +19,9 @@ header {
 .con {
   background-color: #fff1eb
 }
+button{
+  width: 10%;
+}
 .search :after {
   content: "";
   background: white;
@@ -60,3 +63,8 @@ header {
 
 
 
+@media screen and (max-width: 600px) {
+  button {
+    width: 20%;
+  }
+}
