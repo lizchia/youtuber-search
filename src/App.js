@@ -113,6 +113,7 @@ function App() {
           onChange={event => {
             setText(event.target.value);
           }}
+          // onKeyPress
         />
         <button
           style={cssButton}
