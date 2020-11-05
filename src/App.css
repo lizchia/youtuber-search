@@ -1,9 +1,4 @@
-
-
 body {
-  
- 
-
 }
 header {
   background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
@@ -15,15 +10,15 @@ header {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-} 
-.con {
-  background-color: #fff1eb
 }
-button{
+.con {
+  background-color: #fff1eb;
+}
+button {
   width: 10%;
 }
 .search :after {
-  content: "";
+  content: '';
   background: white;
   width: 4px;
   height: 20px;
@@ -60,8 +55,6 @@ button{
 .search:not(:placeholder-shown) {
   width: 250px;
 }
-
-
 
 @media screen and (max-width: 600px) {
   button {
