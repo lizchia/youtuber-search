@@ -32,33 +32,22 @@ function App() {
   async function changePage(page) {
     console.log(page);
     let iterate = currentPage ? Math.abs(page - currentPage) : 1;
-    if (pageStorage.length >= 28) {
-      if (page == 1) {
-        console.log(currentPage);
-        console.log(pageStorage);
-        console.log(pageStorage.slice(0, 9));
-        setItems(pageStorage.slice(0, 9));
-      } else if (page == 2) {
-        console.log(currentPage);
-        console.log(pageStorage);
-        console.log(pageStorage.slice(9, 18));
-        setItems(pageStorage.slice(9, 18));
-      } else {
-        console.log(currentPage);
-        console.log(pageStorage);
-        console.log(pageStorage.slice(18, 27));
-        setItems(pageStorage.slice(18, 27));
-      }
-    } else {
+    const pageSlice = pageStorage.slice((page - 1) * 9, page * 9 - 1);
+
+    if (pageSlice.length === 0) {
       for (let i = 0; i < iterate; i++) {
         await fetchYoutubeResult(
           currentPage
             ? page > currentPage
-              ? prevPageToken
-              : nextPageToken
+              ? nextPageToken
+              : prevPageToken
             : ''
         );
+        console.log('prev: ', prevPageToken);
+        console.log('next: ', nextPageToken);
       }
+    } else {
+      setItems(pageSlice);
     }
 
     setCurrentPage(page);
@@ -101,6 +90,7 @@ function App() {
       q: text,
       type: ['video'],
     };
+
     if (token) {
       param.pageToken = token;
     }
@@ -112,15 +102,12 @@ function App() {
         setText(text);
         setItems(response.result.items);
 
-        // setItems(...items,...response.result.items);
         setNextPageToken(response.result.nextPageToken);
         setPrevPageToken(response.result.prevPageToken);
         setPageStorage([...pageStorage, ...response.result.items]);
-        // let newPageData = {};
-        // console.log(token);
-        // newPageData[currentPage] = response.result.items;
-        // setPageStorage(Object.assign(pageStorage, newPageData));
         console.log(pageStorage);
+        console.log('res.next:', response.result.nextPageToken);
+        console.log('res.next:', response.result.prevPageToken);
       },
       function (err) {
         console.error('Execute error', err);

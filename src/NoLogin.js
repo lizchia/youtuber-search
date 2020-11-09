@@ -13,7 +13,7 @@ function NoLogin() {
   const cssButton = {
     'font-family': 'Hack, monospace',
     background: 'transparent',
-    color: '#ffffff',
+    color: '#707C74',
     cursor: 'pointer',
     'font-size': '1em',
     padding: '0.5rem',
@@ -22,7 +22,7 @@ function NoLogin() {
     'border-radius': '10px',
   };
 
-  function start() {
+  function start(reset = false) {
     // Initializes the client with the API key and the Translate API.
     window.gapi.client
       .init({
@@ -47,7 +47,9 @@ function NoLogin() {
           console.log(response.result.item);
           setShowPage(true);
           setText(text);
-          setItems([...items, ...response.result.items]);
+          reset
+            ? setItems(response.result.items)
+            : setItems([...items, ...response.result.items]);
           setNextPageToken(response.result.nextPageToken);
         },
         function (err) {
@@ -76,7 +78,7 @@ function NoLogin() {
         <button
           style={cssButton}
           onClick={() => {
-            start();
+            start(true);
           }}
         >
           search
@@ -115,14 +117,16 @@ function NoLogin() {
             ))}
           </div>
           {showPage ? (
-            <button
-              style={cssButton}
-              onClick={() => {
-                start();
-              }}
-            >
-              Load more
-            </button>
+            <div className="d-flex justify-content-center">
+              <button
+                style={cssButton}
+                onClick={() => {
+                  start();
+                }}
+              >
+                Load more
+              </button>
+            </div>
           ) : (
             ''
           )}
