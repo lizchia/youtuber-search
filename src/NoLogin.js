@@ -44,7 +44,7 @@ function NoLogin() {
       })
       .then(
         function (response) {
-          console.log(response.result.item);
+          console.log(response);
           setShowPage(true);
           setText(text);
           reset

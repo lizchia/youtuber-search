@@ -1,21 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Children } from 'react';
 import { Card, Container } from 'react-bootstrap';
 import { Pagination } from 'antd';
-
-import NoLogin from './NoLogin';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import 'antd/dist/antd.css';
+import { propTypes } from 'react-bootstrap/esm/Image';
 
-function App() {
-  const [items, setItems] = useState([]);
-  const [text, setText] = useState('');
-  const [currentPage, setCurrentPage] = useState('');
+export const ThemeContext = React.createContext();
+export function Page(props){
+  
   const [nextPageToken, setNextPageToken] = useState('');
   const [prevPageToken, setPrevPageToken] = useState('');
   const [pageStorage, setPageStorage] = useState([]);
+  let setPageStorages = [...pageStorage];
+
+  return(
+    <ThemeContext.Provider value={pageStorage, nextPageToken, prevPageToken, setPageStorages}>
+      {props.children}
+    </ThemeContext.Provider>
+  )
+} 
+
+export default function App(propTypes) {
+  const [items, setItems] = useState([]);
+  const [text, setText] = useState('');
+  const [totalPage, setTotalPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState('');
+  // const [nextPageToken, setNextPageToken] = useState('');
+  // const [prevPageToken, setPrevPageToken] = useState('');
+  // const [pageStorage, setPageStorage] = useState([]);
   const [showPage, setShowPage] = useState(false);
+  const {nextPageToken, setNextPageToken, prevPageToken, setPrevPageToken, pageStorage, setPageStorage}= propTypes
 
   const cssButton = {
     'font-family': 'Hack, monospace',
@@ -82,11 +98,11 @@ function App() {
         }
       );
   }
-
+  
   function fetchYoutubeResult(token = null) {
     let param = {
       part: ['snippet'],
-      maxResults: 9,
+      // maxResults: 9,
       q: text,
       type: ['video'],
     };
@@ -97,17 +113,17 @@ function App() {
 
     return window.gapi.client.youtube.search.list(param).then(
       function (response) {
-        console.log(response.result.items);
+        console.log(response.pageInfo);
         setShowPage(true);
         setText(text);
         setItems(response.result.items);
-
+        setTotalPage(response.result.pageInfo.totalResults)
         setNextPageToken(response.result.nextPageToken);
         setPrevPageToken(response.result.prevPageToken);
         setPageStorage([...pageStorage, ...response.result.items]);
         console.log(pageStorage);
         console.log('res.next:', response.result.nextPageToken);
-        console.log('res.next:', response.result.prevPageToken);
+        console.log('res.prev:', response.result.prevPageToken);
       },
       function (err) {
         console.error('Execute error', err);
@@ -125,6 +141,7 @@ function App() {
   }, []);
 
   return (
+    <Page>
     <div className="App">
       <header>
         <button
@@ -193,10 +210,9 @@ function App() {
             <Pagination
               className="text-center"
               size="small"
-              total={30}
+              total={totalPage}
+              pageSize={9}
               onChange={(currentPage) => {
-                console.log(currentPage);
-                console.log(currentPage);
                 changePage(currentPage);
               }}
             />
@@ -206,7 +222,7 @@ function App() {
         </Container>
       </div>
     </div>
+    </Page>
   );
 }
 
-export default App;
